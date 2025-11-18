@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}{{ course.title }}{% endblock %}
+{% block content %}
+
+<h2>{{ course.title }}</h2>
+<hr>
+
+<h3>Course Units</h3>
+{% if course.units %}
+  <div class="units">
+    {% for key, unit in course.units.items() %}
+      <div class="unit-card unit">
+        <h4>{{ unit.title }}</h4>
+
+        <div class="unit-actions">
+          {% if unit.pdf %}
+            <button class="unit-btn" style="width: auto;" onclick="togglePDF('pdf-{{ loop.index }}')">PDF</button>
+          {% endif %}
+          {% if unit.video %}
+            <button class="unit-btn" style="width: auto;" onclick="togglePDF('video-{{ loop.index }}')">Video</button>
+          {% endif %}
+        </div>
+
+        {% if unit.pdf %}
+          <div id="pdf-{{ loop.index }}" class="pdf-container hidden">
+            <iframe src="{{ unit.pdf }}" width="100%" height="500px"></iframe>
+            <br>
+            <a href="{{ unit.pdf }}" target="_blank">Open PDF</a>
+          </div>
+        {% endif %}
+
+        {% if unit.video %}
+          <div id="video-{{ loop.index }}" class="pdf-container hidden">
+            <iframe width="100%" height="400px" src="{{ unit.video }}" frameborder="0" allowfullscreen></iframe>
+          </div>
+        {% endif %}
+      </div>
+      <hr>
+    {% endfor %}
+  </div>
+{% else %}
+  <p>No units found for this course yet.</p>
+{% endif %}
+
+<script>
+function toggleUnits() {
+  document.getElementById("unitList").classList.toggle("hidden");
+}
+
+function togglePDF(id) {
+  document.getElementById(id).classList.toggle("hidden");
+}
+</script>
+
+<style>
+.hidden { display: none; }
+.course-container {
+  padding: 20px;
+  max-width: 800px;
+  margin: auto;
+  font-family: 'Poppins', sans-serif;
+}
+.open-btn, .unit-btn {
+  background-color: #1565c0;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 8px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+.unit { margin-top: 15px; }
+.pdf-container {
+  margin-top: 10px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+}
+</style>
+{% endblock %}

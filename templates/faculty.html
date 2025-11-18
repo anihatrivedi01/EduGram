@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Our Faculties</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+     <header class="site-header">
+    
+    <div style="display: flex;align-items: center;justify-content: space-evenly;">
+      <section>
+      <a href="/" class="brand">EduGram</a>
+      </section>
+     <section class="right">
+  <a href="/login" class="login-link">Sign in</a>
+  <a href="/register" class="signup-btn">Sign up</a>
+  <a href="/profile" class="profile-link">
+    <img src="{{ url_for('static', filename='user_456283.png') }}" alt="Profile" class="profile-icon">
+  </a>
+</section>
+
+    </div>
+
+    <div class="container header-container">
+      <nav class="nav-links">
+        <a href="/">Home</a>
+        <a href="/faculty">Faculties</a>
+      
+        <a href="{{ url_for('doubts') }}">Doubt Forum</a>
+        <a href="assignments">Assignment</a>
+        <a href="/feedback">Feedback</a>
+
+      </nav>
+    </div>
+  </header>
+       {% if session.get('role') == 'faculty' %}
+  <a href="{{ url_for('faculty_dashboard') }}" class="faculty-dashboard-link">Click here to redirect to Faculty Dashboard</a>
+{% endif %}
+
+  <h1 style="text-align: center;">Meet Our Faculty Members</h1>
+
+  <div class="faculty-container">
+    {% for fid, f in faculties.items() %}
+      <div class="faculty-card" style="display: flex; flex-direction: column; justify-content: space-between; height: 100%;">
+        <div>
+          <h3>{{ f.name }}</h3>
+          <p><strong>Subject:</strong> {{ f.subject }}</p>
+          <p>{{ f.bio }}</p>
+        </div>
+        <button class="btn" style="margin-top: auto;" onclick="showModal('{{ f.name }}', '{{ f.contact }}', '{{ f.email }}')">Contact Info</button>
+      </div>
+    {% endfor %}
+  </div>
+
+  <div id="infoModal" class="modal" onclick="this.style.display='none'">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <h3 id="mName"></h3>
+      <p><strong>Phone:</strong> <span id="mContact"></span></p>
+      <p><strong>Email:</strong> <span id="mEmail"></span></p>
+      <button class="btn" onclick="document.getElementById('infoModal').style.display='none'">Close</button>
+    </div>
+  </div>
+  <footer class="site-footer">
+    <p>© {{ current_year }} EduGram | Empowering Rural Learning 🌼</p>
+  </footer>
+  <script>
+    function showModal(name, contact, email) {
+      document.getElementById('mName').textContent = name;
+      document.getElementById('mContact').textContent = contact || 'Not available';
+      document.getElementById('mEmail').textContent = email || 'Not available';
+      document.getElementById('infoModal').style.display = 'grid';
+    }
+  </script>
+</body>
+</html>

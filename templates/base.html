@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}EduGram{% endblock %}</title>
+
+  <!-- Fonts and Icons for a graceful look -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- Main CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+  <!-- ===== HEADER ===== -->
+       
+  <header class="site-header">
+    
+    <div style="display: flex;align-items: center;justify-content: space-evenly;">
+      <section>
+      <a href="/" class="brand">EduGram</a>
+      </section>
+     <section class="right">
+  <a href="/login" class="login-link">Sign in</a>
+  <a href="/register" class="signup-btn">Sign up</a>
+  <a href="/profile" class="profile-link">
+    <img src="{{ url_for('static', filename='user_456283.png') }}" alt="Profile" class="profile-icon">
+  </a>
+</section>
+
+    </div>
+
+    <div class="container header-container">
+      <nav class="nav-links">
+        <a href="/">Home</a>
+        <a href="/faculty">Faculties</a>
+      
+        <a href="{{ url_for('doubts') }}">Doubt Forum</a>
+        <a href="/assignments">Assignment</a>
+        <a href="/feedback">Feedback</a>
+
+      </nav>
+    </div>
+  </header>
+      {% if session.get('role') == 'faculty' %}
+  <a href="{{ url_for('faculty_dashboard') }}" class="faculty-dashboard-link">Click here to redirect to Faculty Dashboard</a>
+{% endif %}
+
+  <!-- ===== FLASH MESSAGES ===== -->
+  <section class="flash-container">
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul class="flashes">
+          {% for m in messages %}
+            <li class="flash">{{ m }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+  </section>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <main class="container main-content">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="site-footer">
+    <p>© {{ current_year }} EduGram | Empowering Rural Learning 🌼</p>
+  </footer>
+
+
+  <!-- ===== SCRIPT ===== -->
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

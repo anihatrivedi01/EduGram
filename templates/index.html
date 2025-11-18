@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% block content %}
+
+  <!-- 🌿 Search Bar -->
+  <div style="
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 0 20px;
+  ">
+    <h1>Courses</h1>
+    <input 
+      type="text" 
+      id="searchInput" 
+      placeholder="Search for a course..." 
+      style="
+        width: 60%; 
+        padding: 10px; 
+        border: 1px solid #ccc; 
+        border-radius: 8px; 
+        font-size: 16px;"
+      onkeyup="filterCourses()"
+    >
+  </div>
+  
+  <!-- 🌸 Course Cards -->
+  <div class="courses" id="courseContainer">
+    {% for cid, course in courses.items() %}
+      <div class="card" data-title="{{ course.get('title', '').lower() }}">
+        <h3>{{ course.get('title', 'Untitled Course') }}</h3>
+
+     {# get course description, fall back to first unit title if no course text #}
+{% set course_text = course.get('text') %}
+{% set first_unit = course.get('units', {}).values()|list|first %}
+
+{% if course_text %}
+  <p>{{ course_text[:120] }}{% if course_text|length > 120 %}...{% endif %}</p>
+{% elif first_unit %}
+  <p><em>{{ first_unit.get('title', 'No description available') }}</em></p>
+{% else %}
+  <p><em>No description available yet.</em></p>
+{% endif %}
+
+
+        <a class="btn" href="/course/{{ cid }}">Open</a>
+
+        {% set is_enrolled = false %}
+        {% if enrolled %}
+          {% set val = enrolled.get(cid) %}
+          {% if val in [true, 'true', 'True', 1, '1'] %}
+            {% set is_enrolled = true %}
+          {% endif %}
+        {% endif %}
+
+        {% if is_enrolled %}
+          <button class="btn enrolled-btn" disabled>Enrolled ✓</button>
+        {% else %}
+          <a class="btn enroll-btn" href="{{ url_for('enroll', course_id=cid) }}">Enroll Now</a>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+
+  <!-- 🌿 Script for Filtering Courses -->
+  <script>
+    function filterCourses() {
+      const input = document.getElementById('searchInput').value.toLowerCase();
+      const cards = document.querySelectorAll('#courseContainer .card');
+      cards.forEach(card => {
+        const title = card.getAttribute('data-title');
+        card.style.display = title.includes(input) ? 'block' : 'none';
+      });
+    }
+  </script>
+
+{% endblock %}

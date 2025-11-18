@@ -1,0 +1,46 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Feedback</title>
+</head> -->
+{% extends 'base.html' %}
+{% block content %}
+<!-- <body> -->
+    <h2>Feedback Section</h2>
+
+    <!-- Feedback Form -->
+    <form method="POST" action="/feedback">
+        <input type="text" name="user" placeholder="Your name" required><br><br>
+        <textarea name="feedback" placeholder="Write your feedback..." required></textarea><br>
+        <button type="submit">Submit Feedback</button>
+    </form>
+
+    <!-- Filter Dropdown -->
+    <form method="GET" action="/feedback">
+        <label>Filter by sentiment:</label>
+        <select name="filter" onchange="this.form.submit()">
+            <option value="all" {% if selected=='all' %}selected{% endif %}>All</option>
+            <option value="positive" {% if selected=='positive' %}selected{% endif %}>Positive</option>
+            <option value="neutral" {% if selected=='neutral' %}selected{% endif %}>Neutral</option>
+            <option value="negative" {% if selected=='negative' %}selected{% endif %}>Negative</option>
+        </select>
+    </form>
+
+    <hr>
+
+    <!-- Display All Feedbacks -->
+    {% for fb in feedbacks %}
+        <div class="feedback {{ fb.sentiment }}">
+            <strong>{{ fb.user }}</strong> ({{ fb.sentiment }})<br>
+              <small>{{ fb.timestamp | default("Unknown time") }}</small><br>
+            {{ fb.text }}
+        </div>
+    {% else %}
+        <p>No feedback yet.</p>
+    {% endfor %}
+
+<!-- </body>
+</html> -->
+{% endblock %}

@@ -1,0 +1,23 @@
+<h1>{{ course.title }}</h1>
+
+{% if course.get('units') %}
+  {% for unit_id, unit in course['units'].items() %}
+    <section class="unit">
+      <h2>{{ unit.get('title', 'Untitled Unit') }}</h2>
+      {% if unit.get('video') %}
+        <div class="video-container">
+          <iframe width="560" height="315"
+                  src="{{ unit.get('video') }}"
+                  title="{{ unit.get('title', 'Video') }}"
+                  frameborder="0"
+                  allowfullscreen>
+          </iframe>
+        </div>
+      {% endif %}
+    </section>
+  {% endfor %}
+{% else %}
+  <p>No units available yet.</p>
+{% endif %}
+
+<a href="/" class="btn">← Back to Courses</a>

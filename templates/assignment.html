@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="assignments-container">
+
+  <!-- 🌼 Heading and Search Bar -->
+  <div class="assignments-header">
+    <h1>Assignments</h1>
+    <input 
+      type="text" 
+      id="assignmentSearch" 
+      placeholder="Search assignments..." 
+      onkeyup="filterAssignments()"
+    >
+  </div>
+
+
+  <!-- 📘 Subject-wise Assignments -->
+  <div class="subjects">
+    {% for subject, assignments in assignments_data.items() %}
+    <div class="subject-card" style="background: #f9f9f9; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+      <h2 style="color: #0d47a1;">{{ subject }}</h2>
+      <ul style="list-style: none; padding-left: 0;">
+        {% for a in assignments %}
+        <li class="assignment-item" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; background: #fff; padding: 0.8rem; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+          <span class="assignment-title">{{ a.title }}</span>
+          <div>
+            <a href="{{ a.link }}" target="_blank" class="btn" style="margin-right: 10px;">View</a>
+
+            {% if user_data.role != 'faculty' %}
+            <!-- Student submission form -->
+            <form action="{{ url_for('submit_assignment', subject=subject, title=a.title) }}" method="POST" enctype="multipart/form-data" style="display:inline;">
+              <input type="file" name="file" required style="font-size: 0.8rem;">
+              <button type="submit" class="btn" style="background-color: #1565c0; color: white;">Submit</button>
+            </form>
+            {% endif %}
+          </div>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endfor %}
+  </div>
+
+</div>
+
+<!-- 🌸 Search Filter Script -->
+<script>
+function filterAssignments() {
+  let input = document.getElementById('assignmentSearch').value.toLowerCase();
+  let items = document.querySelectorAll('.assignment-item');
+
+  items.forEach(item => {
+    let title = item.querySelector('.assignment-title').textContent.toLowerCase();
+    item.style.display = title.includes(input) ? 'flex' : 'none';
+  });
+}
+</script>
+
+{% endblock %}

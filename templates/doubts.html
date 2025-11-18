@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="doubts-container">
+  <h1>Ask Your Doubt</h1>
+  <form method="post">
+    <textarea name="question" placeholder="Type your question..." required></textarea>
+    <button type="submit" class="btn">Submit Doubt</button>
+  </form>
+
+  <hr>
+
+  <h2>My Doubts</h2>
+  {% if my_doubts %}
+    <ul class="doubt-list">
+      {% for key, doubt in my_doubts.items() %}
+        <li class="doubt-item">
+          <strong>{{ doubt.question }}</strong><br>
+          <small>Asked by: {{ doubt.user_email }}</small>
+
+          {% if doubt.answers %}
+            <ul class="answers">
+              {% for akey, ans in doubt.answers.items() %}
+                <li><strong>{{ ans.answered_by }}</strong>: {{ ans.answer_text }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p><em>You haven’t asked any doubts yet.</em></p>
+  {% endif %}
+
+  <hr>
+
+  <h2>All Doubts</h2>
+  {% if all_doubts %}
+    <ul class="doubt-list">
+      {% for key, doubt in all_doubts.items() %}
+        <li class="doubt-item">
+          <strong>{{ doubt.question }}</strong><br>
+          <small>Asked by: {{ doubt.user_email }}</small>
+
+          {% if doubt.answers %}
+            <ul class="answers">
+              {% for akey, ans in doubt.answers.items() %}
+                <li><strong>{{ ans.answered_by }}</strong>: {{ ans.answer_text }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+
+          <form method="post" class="answer-form">
+            <input type="hidden" name="doubt_id" value="{{ key }}">
+            <textarea name="answer" placeholder="Write your answer..." required></textarea>
+            <button type="submit" class="btn small">Post Answer</button>
+          </form>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p><em>No doubts have been posted yet.</em></p>
+  {% endif %}
+</div>
+{% endblock %}

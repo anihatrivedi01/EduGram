@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="dashboard-container">
+  <h1>Welcome, {{ user.name }}</h1>
+  <p class="subtitle">Faculty Dashboard</p>
+
+  <button onclick="toggleForm('courseForm')" class="btn">+ New Course</button>
+  <button onclick="toggleForm('facultyForm')" class="btn">+ New Faculty</button>
+  <button onclick="toggleForm('assignform')" class="btn">+ New Assignment</button>
+
+  <!-- Add Course Form -->
+<form id = 'courseForm' method="POST" action="/add_course">
+  <h3>Add New Course</h3>
+  <input type="text" name="title" placeholder="Course Title" required>
+  <textarea name="text" placeholder="Description"></textarea>
+
+
+  <h4>Units</h4>
+  <div id="units">
+    <div class="unit">
+      <input type="text" name="unit_title_1" placeholder="Unit 1 Title">
+      <input type="url" name="unit_pdf_1" placeholder="PDF Link">
+      <input type="url" name="unit_video_1" placeholder="Video Embed Link">
+    </div>
+  </div>
+
+  <button type="button" onclick="addUnit()">+ Add Another Unit</button>
+  <br><br>
+  <button type="submit">Add Course</button>
+</form>
+  <!-- Add Faculty Form -->
+  <form id="facultyForm" class="hidden" method="POST" action="{{ url_for('add_faculty') }}">
+    <h3>Add New Faculty Member</h3>
+    <label>Name:</label>
+    <input type="text" name="name" required>
+
+    <label>Subject:</label>
+    <input type="text" name="subject" required>
+
+    <label>Bio:</label>
+    <textarea name="bio"></textarea>
+     <input type="text" name="contact" placeholder="Contact Number">
+  <input type="email" name="email" placeholder="Email">
+
+    <button type="submit" class="btn-submit">Add Faculty</button>
+  </form>
+
+  <form id = 'assignform' method="POST" action="{{ url_for('upload_assignment') }}">
+  <h3>Upload New Assignment</h3>
+  
+  <label>Subject:</label>
+  <input type="text" name="subject" placeholder="Subject Name" required>
+
+  <label>Assignment Title:</label>
+  <input type="text" name="title" placeholder="Assignment Title" required>
+
+  <label>PDF Link:</label>
+  <input type="url" name="pdf_link" placeholder="PDF URL" required>
+
+  <button type="submit">Upload Assignment</button>
+</form>
+
+</div>
+
+<style>
+  .hidden {
+    display: none;
+  }
+</style>
+
+<script>
+  let unitCount = 1;
+function addUnit() {
+  unitCount++;
+  const div = document.createElement('div');
+  div.classList.add('unit');
+  div.innerHTML = `
+    <input type="text" name="unit_title_${unitCount}" placeholder="Unit ${unitCount} Title">
+    <input type="url" name="unit_pdf_${unitCount}" placeholder="PDF Link">
+    <input type="url" name="unit_video_${unitCount}" placeholder="Video Embed Link">
+  `;
+  document.getElementById('units').appendChild(div);
+}
+  function toggleForm(id) {
+    const forms = document.querySelectorAll('form');
+    forms.forEach(form => {
+      if (form.id === id) {
+        form.classList.toggle('hidden');
+      } else {
+        form.classList.add('hidden');
+      }
+    });
+  }
+</script>
+
+{% endblock %}

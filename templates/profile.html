@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="profile-container">
+  <h1>Welcome, {{ user.name }}</h1>
+
+  <a href="{{ url_for('edit_profile') }}" class="btn">Edit Profile</a>
+
+
+  <div class="profile-details">
+    <p><strong>Email:</strong> {{ user.email }}</p>
+    <p><strong>Phone:</strong> {{ user.phone or 'Not provided' }}</p>
+    <p><strong>Age:</strong> {{ user.age or 'Not provided' }}</p>
+    <p><strong>Gender:</strong> {{ user.gender or 'Not specified' }}</p>
+    <p><strong>Address:</strong> {{ user.address or 'Not provided' }}</p>
+    <p><strong>Role:</strong> {{ user.role|capitalize }}</p>
+  </div>
+
+  <hr>
+
+<h2>Your Enrolled Courses</h2>
+{% if enrolled %}
+  <ul class="enrolled-list">
+    {% for cid, status in enrolled.items() %}
+      {% if status %}
+        <li><a href="/course/{{ cid }}">{{ courses[cid].title }}</a></li>
+      {% endif %}
+    {% endfor %}
+  </ul>
+  {% if not enrolled|selectattr('1')|list %}
+    <p><em>You haven’t enrolled in any courses yet.</em></p>
+  {% endif %}
+{% else %}
+  <p><em>You haven’t enrolled in any courses yet.</em></p>
+{% endif %}
+
+  <hr>
+
+  <a href="/logout" class="btn logout-btn">Log Out</a>
+</div>
+{% endblock %}
+
